@@ -192,7 +192,7 @@
     [patchTable reloadData];
 
     if ([patchArray count] > 0)
-        [patchTable selectRow:0 byExtendingSelection:NO];
+        [patchTable selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
     else
         [patchTable deselectAll:self];
     
@@ -291,9 +291,8 @@
 
     [patch rescueFromLimbo];
     [patchArray insertObject:patch atIndex:index];
-    
     [patchTable reloadData];
-    [patchTable selectRow:index byExtendingSelection:NO];
+    [patchTable selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
 
     [[undoManager prepareWithInvocationTarget:self]
         removePatchAtIndex:index
@@ -1061,7 +1060,7 @@
     [[inputTable dataSource] tableView:inputTable newEndpointWithName:baseName];
     
     // Set up the newly created endpoint for editing
-    [inputTable selectRow:[inputTable numberOfRows]-1 byExtendingSelection:NO];
+    [inputTable selectRowIndexes:[NSIndexSet indexSetWithIndex:([inputTable numberOfRows]-1)] byExtendingSelection:NO];
     [inputTable editColumn:0 row:[inputTable selectedRow] withEvent:nil select:YES];
 }
     
@@ -1076,7 +1075,7 @@
     [[outputTable dataSource] tableView:outputTable newEndpointWithName:baseName];
 
     // Set up the newly created endpoint for editing
-    [outputTable selectRow:[outputTable numberOfRows]-1 byExtendingSelection:NO];
+    [outputTable selectRowIndexes:[NSIndexSet indexSetWithIndex:([outputTable numberOfRows]-1)] byExtendingSelection:NO];
     [outputTable editColumn:0 row:[outputTable selectedRow] withEvent:nil select:YES];
 }
 
