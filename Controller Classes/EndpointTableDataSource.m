@@ -36,13 +36,13 @@
 }
 
 
-- (int)numberOfRowsInTableView:(NSTableView*)tableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView*)tableView
 {
     return [endpointArray count];
 }
 
 
-- (id)tableView:(NSTableView*)tableView objectValueForTableColumn:(NSTableColumn*)column row:(int)rowIndex
+- (id)tableView:(NSTableView*)tableView objectValueForTableColumn:(NSTableColumn*)column row:(NSInteger)rowIndex
 {
     PYMIDIVirtualEndpoint* endpoint = [endpointArray objectAtIndex:rowIndex];
     
@@ -65,7 +65,7 @@
 }
 
 
-- (void)tableView:(NSTableView*)tableView setObjectValue:(id)value forTableColumn:(NSTableColumn*)column row:(int)rowIndex
+- (void)tableView:(NSTableView*)tableView setObjectValue:(id)value forTableColumn:(NSTableColumn*)column row:(NSInteger)rowIndex
 {
     PYMIDIVirtualEndpoint* endpoint = [endpointArray objectAtIndex:rowIndex];
 
@@ -127,12 +127,12 @@
     newEndpoint = [[endpointClass alloc] initWithName:newName];
     
     [self tableView:tableView addEndpoint:newEndpoint atIndex:[endpointArray count]];
-    
+
     [newEndpoint release];
 }
 
 
-- (void)tableView:(NSTableView*)tableView addEndpoint:(PYMIDIVirtualEndpoint*)endpoint atIndex:(int)index
+- (void)tableView:(NSTableView*)tableView addEndpoint:(PYMIDIVirtualEndpoint*)endpoint atIndex:(NSInteger)index
 {
     NSWindow* window = [tableView window];
     if ([window isKeyWindow] && ![window makeFirstResponder:nil]) return;
@@ -149,7 +149,7 @@
 }
 
 
-- (void)tableView:(NSTableView*)tableView removeEndpointAtIndex:(int)index
+- (void)tableView:(NSTableView*)tableView removeEndpointAtIndex:(NSInteger)index
 {
     NSWindow* window = [tableView window];
     if ([window isKeyWindow] && ![window makeFirstResponder:nil]) return;
@@ -170,7 +170,7 @@
 }
 
 
-- (void)tableView:(NSTableView*)tableView setName:(NSString*)name forEndpointAtIndex:(int)index
+- (void)tableView:(NSTableView*)tableView setName:(NSString*)name forEndpointAtIndex:(NSInteger)index
 {
     PYMIDIVirtualEndpoint* endpoint = [endpointArray objectAtIndex:index];
     NSString* oldName = [[endpoint name] retain];

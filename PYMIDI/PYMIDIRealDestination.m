@@ -3,12 +3,9 @@
 #import <PYMIDI/PYMIDIManager.h>
 #import <PYMIDI/PYMIDIEndpointDescriptor.h>
 
-
 @implementation PYMIDIRealDestination
 
-
-- (id)initWithCoder:(NSCoder*)coder
-{
+- (id)initWithCoder:(NSCoder*)coder {
     PYMIDIManager*				manager = [PYMIDIManager sharedInstance];
     NSString*					newName;
     SInt32						newUniqueID;
@@ -25,9 +22,7 @@
     return [[manager realDestinationWithDescriptor:descriptor] retain];
 }    
 
-
-- (void)syncWithMIDIEndpoint
-{
+- (void)syncWithMIDIEndpoint {
     MIDIEndpointRef newEndpointRef;
     
     if (midiEndpointRef && PYMIDIDoesDestinationStillExist (midiEndpointRef))
@@ -47,9 +42,7 @@
     [self setPropertiesFromMIDIEndpoint];
 }
 
-
-- (void)startIO
-{
+- (void)startIO {
     if (midiEndpointRef == nil || midiPortRef != nil) return;
 
     MIDIOutputPortCreate (
@@ -58,21 +51,16 @@
     );
 }
 
-
-- (void)stopIO
-{
+- (void)stopIO {
     if (midiPortRef == nil) return;
     
     MIDIPortDispose (midiPortRef);
     midiPortRef = nil;
 }
 
-
-- (void)processMIDIPacketList:(const MIDIPacketList*)packetList sender:(id)sender
-{
+- (void)processMIDIPacketList:(const MIDIPacketList*)packetList sender:(id)sender {
     if (midiEndpointRef != NULL && midiPortRef != NULL)
         MIDISend (midiPortRef, midiEndpointRef, packetList);
 }
-
 
 @end

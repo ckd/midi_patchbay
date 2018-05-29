@@ -1,24 +1,21 @@
 #import "Patch.h"
 #import <PYMIDI/PYMIDI.h>
 
-
 @interface Patch (private)
 
 - (NSString*)channelFilterDescription;
 - (NSString*)noteFilterDescription;
 - (NSString*)clockDescription;
 
-- (unsigned int)processMIDIMessage:(Byte*)message ofLength:(unsigned int)length;
+- (NSUInteger)processMIDIMessage:(Byte*)message ofLength:(NSUInteger)length;
 
 @end
-
 
 @implementation Patch
 
 #pragma mark Initialisation
 
-- (Patch*)initWithInput:(PYMIDIEndpoint*)newInput output:(PYMIDIEndpoint*)newOutput
-{
+- (Patch*)initWithInput:(PYMIDIEndpoint*)newInput output:(PYMIDIEndpoint*)newOutput {
     isInLimbo = YES;
     
     input  = [newInput retain];
@@ -48,9 +45,7 @@
     return self;
 }
 
-
-- (Patch*)initFromPatch:(Patch*)patch
-{
+- (Patch*)initFromPatch:(Patch*)patch {
     BOOL useNextMIDIChannel = NO;
     
     [self initWithInput:[patch input] output:[patch output]];
@@ -81,9 +76,7 @@
     return self;
 }
 
-
-- (void)dealloc
-{
+- (void)dealloc {
     [input removeReceiver:self];
     [input  release];
     
@@ -93,9 +86,7 @@
     [super dealloc];
 }
 
-
-- (id)initWithCoder:(NSCoder*)coder
-{
+- (id)initWithCoder:(NSCoder*)coder {
     self = [self
         initWithInput:[coder decodeObjectForKey:@"Input"]
         output:[coder decodeObjectForKey:@"Output"]
@@ -120,31 +111,26 @@
     return self;
 }
 
-
-- (void)encodeWithCoder:(NSCoder*)coder
-{
+- (void)encodeWithCoder:(NSCoder*)coder {
     [coder encodeBool:isEnabled forKey:@"IsEnabled"];
     
     [coder encodeObject:input forKey:@"Input"];
-    
     [coder encodeBool:shouldFilterChannel forKey:@"ShouldFilterChannel"];
-    [coder encodeInt:channelMask forKey:@"ChannelMask"];
+    [coder encodeInteger:channelMask forKey:@"ChannelMask"];
     [coder encodeBool:shouldRemapChannel forKey:@"ShouldRemapChannel"];
-    [coder encodeInt:remappingChannel forKey:@"RemappingChannel"];
+    [coder encodeInteger:remappingChannel forKey:@"RemappingChannel"];
     
     [coder encodeBool:shouldAllowNotes forKey:@"ShouldAllowNotes"];
     [coder encodeBool:shouldFilterRange forKey:@"ShouldFilterRange"];
-    [coder encodeInt:lowestAllowedNote forKey:@"LowestAllowedNote"];
-    [coder encodeInt:highestAllowedNote forKey:@"HighestAllowedNote"];
+    [coder encodeInteger:lowestAllowedNote forKey:@"LowestAllowedNote"];
+    [coder encodeInteger:highestAllowedNote forKey:@"HighestAllowedNote"];
     [coder encodeBool:shouldTranspose forKey:@"ShouldTranspose"];
-    [coder encodeInt:transposeDistance forKey:@"TransposeDistance"];
+    [coder encodeInteger:transposeDistance forKey:@"TransposeDistance"];
     
     [coder encodeBool:shouldTransmitClock forKey:@"ShouldTransmitClock"];
     
     [coder encodeObject:output forKey:@"Output"];
 }
-
-
 
 #pragma mark Limbo handling
 
@@ -155,18 +141,15 @@
 //
 // When a patch is in limbo it doesn't transmit any data.
 
-- (BOOL)isInLimbo
-{
+- (BOOL)isInLimbo {
     return isInLimbo;
 }
 
-- (void)banishToLimbo
-{
+- (void)banishToLimbo {
     isInLimbo = YES;
 }
 
-- (void)rescueFromLimbo
-{
+- (void)rescueFromLimbo {
     isInLimbo = NO;
 }
 
@@ -175,8 +158,7 @@
 #pragma mark Description
 
 
-- (NSString*)description
-{
+- (NSString*)description {
     NSMutableArray* parts = [NSMutableArray arrayWithCapacity:0];
     NSString* description;
     
@@ -192,9 +174,7 @@
     return [parts componentsJoinedByString:@"; "];
 }
 
-
-- (NSString*)channelFilterDescription
-{
+- (NSString*)channelFilterDescription {
     NSString* description;
     
     NSMutableArray* parts = [NSMutableArray arrayWithCapacity:0];
@@ -247,9 +227,7 @@
     return description;
 }
 
-
-- (NSString*)noteFilterDescription
-{
+- (NSString*)noteFilterDescription {
 	PYMIDIManager* manager = [PYMIDIManager sharedInstance];
 
     NSString* description;
@@ -276,43 +254,30 @@
     return description;
 }
 
-
-- (NSString*)clockDescription
-{
+- (NSString*)clockDescription {
     if (shouldTransmitClock)
         return @"clock";
     else
         return nil;
 }
 
-
-
 #pragma mark Enabling
 
-
-- (BOOL)isEnabled
-{
+- (BOOL)isEnabled {
     return isEnabled;
 }
 
-- (void)setIsEnabled:(BOOL)newIsEnabled
-{
+- (void)setIsEnabled:(BOOL)newIsEnabled {
     isEnabled = newIsEnabled;
 }
 
-
-
 #pragma mark Input
 
-
-- (PYMIDIEndpoint*)input
-{
+- (PYMIDIEndpoint*)input {
     return input;
 }
 
-
-- (void)setInput:(PYMIDIEndpoint*)newInput
-{
+- (void)setInput:(PYMIDIEndpoint*)newInput {
     [input removeReceiver:self];
     
     [input autorelease];
@@ -321,28 +286,21 @@
     [input addReceiver:self];
 }
 
-
-
 #pragma mark Filters - Filter channels
 
-
-- (BOOL)shouldFilterChannel
-{
+- (BOOL)shouldFilterChannel {
     return shouldFilterChannel;
 }
 
-- (void)setShouldFilterChannel:(BOOL)newShouldFilterChannel
-{
+- (void)setShouldFilterChannel:(BOOL)newShouldFilterChannel {
     shouldFilterChannel = newShouldFilterChannel;
 }
 
-- (unsigned int)channelMask
-{
+- (NSUInteger)channelMask {
     return channelMask;
 }
 
-- (void)setChannelMask:(unsigned int)newChannelMask
-{
+- (void)setChannelMask:(NSUInteger)newChannelMask {
     channelMask = newChannelMask;
 }
 
@@ -351,23 +309,19 @@
 #pragma mark Filters - Remap channels
 
 
-- (BOOL)shouldRemapChannel
-{
+- (BOOL)shouldRemapChannel {
     return shouldRemapChannel;
 }
 
-- (void)setShouldRemapChannel:(BOOL)newShouldRemapChannel
-{
+- (void)setShouldRemapChannel:(BOOL)newShouldRemapChannel {
     shouldRemapChannel = newShouldRemapChannel;
 }
 
-- (int)remappingChannel
-{
+- (NSInteger)remappingChannel {
     return remappingChannel;
 }
 
-- (void)setRemappingChannel:(int)newRemappingChannel
-{
+- (void)setRemappingChannel:(NSInteger)newRemappingChannel {
     remappingChannel = newRemappingChannel;
 }
 
@@ -377,48 +331,37 @@
 #pragma mark Filters - Allow notes
 
 
-- (BOOL)shouldAllowNotes
-{
+- (BOOL)shouldAllowNotes {
     return shouldAllowNotes;
 }
 
-- (void)setShouldAllowNotes:(BOOL)newShouldAllowNotes
-{
+- (void)setShouldAllowNotes:(BOOL)newShouldAllowNotes {
     shouldAllowNotes = newShouldAllowNotes;
 }
 
-
-
 #pragma mark Filters - Filter range
 
-
-- (BOOL)shouldFilterRange
-{
+- (BOOL)shouldFilterRange {
     return shouldFilterRange;
 }
 
-- (void)setShouldFilterRange:(BOOL)newShouldFilterRange
-{
+- (void)setShouldFilterRange:(BOOL)newShouldFilterRange {
     shouldFilterRange = newShouldFilterRange;
 }
 
-- (Byte)lowestAllowedNote
-{
+- (Byte)lowestAllowedNote {
     return lowestAllowedNote;
 }
 
-- (void)setLowestAllowedNote:(Byte)newLowestAllowedNote
-{
+- (void)setLowestAllowedNote:(Byte)newLowestAllowedNote {
     lowestAllowedNote = newLowestAllowedNote;
 }
 
-- (Byte)highestAllowedNote
-{
+- (Byte)highestAllowedNote {
     return highestAllowedNote;
 }
 
-- (void)setHighestAllowedNote:(Byte)newHighestAllowedNote
-{
+- (void)setHighestAllowedNote:(Byte)newHighestAllowedNote {
     highestAllowedNote = newHighestAllowedNote;
 }
 
@@ -427,23 +370,19 @@
 #pragma mark Filters - Transpose
 
 
-- (BOOL)shouldTranspose
-{
+- (BOOL)shouldTranspose {
     return shouldTranspose;
 }
 
-- (void)setShouldTranspose:(BOOL)newShouldTranspose
-{
+- (void)setShouldTranspose:(BOOL)newShouldTranspose {
     shouldTranspose = newShouldTranspose;
 }
 
-- (int)transposeDistance
-{
+- (NSInteger)transposeDistance {
     return transposeDistance;
 }
 
-- (void)setTransposeDistance:(int)newTransposeDistance
-{
+- (void)setTransposeDistance:(NSInteger)newTransposeDistance {
     transposeDistance = newTransposeDistance;
 }
 
@@ -452,13 +391,11 @@
 #pragma mark Filters - Transmit clock
 
 
-- (BOOL)shouldTransmitClock
-{
+- (BOOL)shouldTransmitClock {
     return shouldTransmitClock;
 }
 
-- (void)setShouldTransmitClock:(BOOL)newShouldTransmitClock
-{
+- (void)setShouldTransmitClock:(BOOL)newShouldTransmitClock {
     shouldTransmitClock = newShouldTransmitClock;
 }
 
@@ -466,15 +403,12 @@
 
 #pragma mark Output
 
-
-- (PYMIDIEndpoint*)output
-{
+- (PYMIDIEndpoint*)output {
     return output;
 }
 
 
-- (void)setOutput:(PYMIDIEndpoint*)newOutput
-{
+- (void)setOutput:(PYMIDIEndpoint*)newOutput {
     [output removeSender:self];
     
     [output autorelease];
@@ -493,9 +427,7 @@ BOOL isStatusByte (Byte b)		{ return b >= 0x80 && b < 0xF8; }
 BOOL isRealtimeByte (Byte b)	{ return b >= 0xF8; }
 
 
-unsigned int
-midiPacketListSize (const MIDIPacketList* packetList)
-{
+NSUInteger midiPacketListSize (const MIDIPacketList* packetList) {
     const MIDIPacket*	packet;
     int					i;
     
@@ -507,10 +439,8 @@ midiPacketListSize (const MIDIPacketList* packetList)
 }
 
 
-unsigned int
-findEndOfMessage (const MIDIPacket* packet, unsigned int startIndex)
-{
-    unsigned int i;
+NSUInteger findEndOfMessage (const MIDIPacket* packet, NSUInteger startIndex) {
+    NSUInteger i;
     
     // Look for the status byte of the next message, or the end of the packet
     for (i = startIndex + 1; i < packet->length && !isStatusByte (packet->data[i]); i++);
@@ -521,17 +451,15 @@ findEndOfMessage (const MIDIPacket* packet, unsigned int startIndex)
     return i;
 }
 
-
-- (void)processMIDIPacketList:(const MIDIPacketList*)inPacketList sender:(id)sender
-{
+- (void)processMIDIPacketList:(const MIDIPacketList*)inPacketList sender:(id)sender {
     NSMutableData*		data;
     MIDIPacketList*		outPacketList;
     const MIDIPacket*	inPacket;
     MIDIPacket*			outPacket;
-    int					i, j;
-    int					messageStart, messageEnd;
-    int					outMessageStart;
-    int					outMessageLength;
+    NSUInteger			i, j;
+    NSUInteger			messageStart, messageEnd;
+    NSUInteger			outMessageStart;
+    NSUInteger			outMessageLength;
     
     if (isInLimbo || !isEnabled) return;
     
@@ -561,8 +489,8 @@ findEndOfMessage (const MIDIPacket* packet, unsigned int startIndex)
         // Now we loop over the remaining MIDI messages in the packet
         messageStart = j;
         while (messageStart < inPacket->length) {
-            messageEnd = findEndOfMessage (inPacket, messageStart);
-            
+            messageEnd = findEndOfMessage(inPacket, messageStart);
+
             // Copy any realtime bytes in this message to the new packet
             if (shouldTransmitClock) {
                 for (j = messageStart; j <= messageEnd; j++) {
@@ -609,9 +537,7 @@ findEndOfMessage (const MIDIPacket* packet, unsigned int startIndex)
         [output processMIDIPacketList:outPacketList sender:self];
 }
 
-
-- (unsigned int)processMIDIMessage:(Byte*)message ofLength:(unsigned int)length
-{
+- (NSUInteger)processMIDIMessage:(Byte*)message ofLength:(NSUInteger)length {
     // If this is a system message we don't touch it
     if (message[0] >= 0xF0) return length;
     
@@ -648,7 +574,7 @@ findEndOfMessage (const MIDIPacket* packet, unsigned int startIndex)
         int i, j;
         j = 1;
         for (i = 1; i < length; i += 2) {
-            int note = (int)message[i] + transposeDistance;
+            NSInteger note = (NSInteger)message[i] + transposeDistance;
             if (note >= 0 && note <= 127) {
                 message[j] = note;
                 message[j+1] = message[i+1];
@@ -667,12 +593,6 @@ findEndOfMessage (const MIDIPacket* packet, unsigned int startIndex)
     
     return length;
 }
-
-
-
-
-
-
 
 /*
     copy over any sysex and realtime data at the start of the packet

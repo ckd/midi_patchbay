@@ -35,9 +35,7 @@
     patchArray = newPatchArray;
 }
 
-
-- (int)numberOfRowsInTableView:(NSTableView*)tableView
-{
+- (NSInteger)numberOfRowsInTableView:(NSTableView*)tableView {
     return [patchArray count];
 }
 

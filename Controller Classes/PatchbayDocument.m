@@ -8,9 +8,7 @@
 
 @implementation PatchbayDocument
 
-
-- (id)init
-{
+- (id)init {
     self = [super init];
     
     if (self == nil) return nil;
@@ -45,9 +43,7 @@
     return self;
 }
 
-
-- (void)windowControllerDidLoadNib:(NSWindowController*)windowController
-{
+- (void)windowControllerDidLoadNib:(NSWindowController*)windowController {
     NSButtonCell*		buttonCell;
     PatchTableCell*		patchTableCell;
     
@@ -57,8 +53,7 @@
     
     [documentWindow setDelegate:self];
     [virtualEndpointPanel setDelegate:self];
-    
-    
+
     // Set up the patch related stuff
     
     buttonCell = [[NSButtonCell alloc] init];
@@ -117,9 +112,7 @@
     [self syncWithLoadedData];
 }
 
-
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [patchTableDataSource release];
@@ -134,10 +127,7 @@
     [super dealloc];
 }
 
-
-
-- (NSData*)dataRepresentationOfType:(NSString*)type
-{
+- (NSData*)dataRepresentationOfType:(NSString*)type {
     NSMutableData*		data;
     NSKeyedArchiver*	archiver;
     
@@ -155,9 +145,7 @@
     return data;
 }
 
-
-- (BOOL)loadDataRepresentation:(NSData*)data ofType:(NSString*)type
-{
+- (BOOL)loadDataRepresentation:(NSData*)data ofType:(NSString*)type {
     [patchArray release];
     [virtualDestinationArray release];
     [virtualSourceArray release];
@@ -180,9 +168,7 @@
     return YES;
 }
 
-
-- (void)syncWithLoadedData
-{
+- (void)syncWithLoadedData {
     // If we haven't gone through windowControllerDidLoadNib: yet then we don't
     // have an interface to update, so just return.
     if (patchTableDataSource == nil) return;
@@ -206,24 +192,15 @@
     [outputTable reloadData];
 }
 
-
-
-- (NSString*)windowNibName
-{
+- (NSString*)windowNibName {
     return @"PatchbayDocument";
 }
 
-
-
-- (NSUndoManager*)windowWillReturnUndoManager:(NSWindow*)sender
-{
+- (NSUndoManager*)windowWillReturnUndoManager:(NSWindow*)sender {
     return [self undoManager];
 }
 
-
-
-- (void)midiSetupChanged:(NSNotification*)notification
-{
+- (void)midiSetupChanged:(NSNotification*)notification {
     [self buildInputPopUp];
     [self setInputPopUp];
     [self buildOutputPopUp];
@@ -231,14 +208,10 @@
     [patchTable reloadData];
 }
 
-
-
 #pragma mark Patch table
 
-
-- (void)selectedPatchChanged:(NSNotification*)notification
-{
-    int patchIndex = [patchTable selectedRow];
+- (void)selectedPatchChanged:(NSNotification*)notification {
+    NSInteger patchIndex = [patchTable selectedRow];
     
     if (patchIndex != -1)
         selectedPatch = [patchArray objectAtIndex:patchIndex];
@@ -254,9 +227,7 @@
     [self setOutputPopUp];
 }
 
-
-- (IBAction)addPatchButtonPressed:(id)sender
-{
+- (IBAction)addPatchButtonPressed:(id)sender {
     Patch* patch;
     
     if (selectedPatch != nil) {
@@ -284,24 +255,18 @@
     [patch release];
 }
 
-
-- (void)addPatch:(Patch*)patch atIndex:(int)index
-{
-    NSUndoManager* undoManager = [self undoManager];    
+- (void)addPatch:(Patch*)patch atIndex:(NSInteger)index {
+    NSUndoManager* undoManager = [self undoManager];
 
     [patch rescueFromLimbo];
     [patchArray insertObject:patch atIndex:index];
     [patchTable reloadData];
     [patchTable selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
 
-    [[undoManager prepareWithInvocationTarget:self]
-        removePatchAtIndex:index
-    ];
+    [[undoManager prepareWithInvocationTarget:self] removePatchAtIndex:index];
 }
 
-
-- (void)addPatchFromArchive:(NSData*)data atIndex:(int)index
-{
+- (void)addPatchFromArchive:(NSData*)data atIndex:(NSInteger)index {
     Patch* patch = [self unarchivePatchFromPasteBoard:data];
     
     [patch rescueFromLimbo];
@@ -309,8 +274,7 @@
 }
 
 
-- (void)removePatchAtIndex:(int)index
-{
+- (void)removePatchAtIndex:(NSInteger)index {
     NSUndoManager* undoManager = [self undoManager];
     Patch* patch = [[patchArray objectAtIndex:index] retain];
     
@@ -319,16 +283,12 @@
 
     [patchTable reloadData];
 
-    [[undoManager prepareWithInvocationTarget:self]
-        addPatch:patch atIndex:index
-    ];
+    [[undoManager prepareWithInvocationTarget:self] addPatch:patch atIndex:index];
     
     [patch release];
 }
 
-
-- (void)setIsEnabled:(BOOL)isEnabled forPatch:(Patch*)patch
-{
+- (void)setIsEnabled:(BOOL)isEnabled forPatch:(Patch*)patch {
     NSUndoManager* undoManager = [self undoManager];    
     BOOL wasEnabled;
     
@@ -342,9 +302,7 @@
     ];
 }
 
-
-- (NSData*)archivePatchForPasteBoard:(Patch*)patch
-{
+- (NSData*)archivePatchForPasteBoard:(Patch*)patch {
     NSArray*				endpointArray;
     PYMIDIEndpointSet*		endpointSet;
     NSMutableData*			data;
@@ -366,9 +324,7 @@
     return data;
 }
 
-
-- (Patch*)unarchivePatchFromPasteBoard:(NSData*)data
-{
+- (Patch*)unarchivePatchFromPasteBoard:(NSData*)data {
     NSArray*				endpointArray;
     PYMIDIEndpointSet*		endpointSet;
     NSKeyedUnarchiver*		unarchiver;
@@ -388,13 +344,9 @@
     return patch;
 }
 
-
-
 #pragma mark Patch editing - MIDI Input
 
-
-- (void)buildInputPopUp
-{
+- (void)buildInputPopUp {
     PYMIDIManager*	manager = [PYMIDIManager sharedInstance];
     NSArray*		realSources;
     NSEnumerator*	enumerator;
@@ -427,28 +379,21 @@
     [[inputPopUp lastItem] setAction:@selector(editVirtualInputs:)];
 }
 
-
-- (void)setInputPopUp
-{
+- (void)setInputPopUp {
     if (selectedPatch != nil) {
         [inputPopUp setEnabled:YES];
         [inputPopUp selectItemAtIndex:[inputPopUp indexOfItemWithRepresentedObject:[selectedPatch input]]];    
-    }
-    else {
+    } else {
         [inputPopUp setEnabled:NO];
         [inputPopUp selectItemAtIndex:-1];    
     }
 }
 
-
-- (IBAction)inputPopUpChanged:(id)sender
-{
+- (IBAction)inputPopUpChanged:(id)sender {
     [self setInput:[[inputPopUp selectedItem] representedObject] forPatch:selectedPatch];
 }
 
-
-- (void)setInput:(PYMIDIEndpoint*)input forPatch:(Patch*)patch
-{
+- (void)setInput:(PYMIDIEndpoint*)input forPatch:(Patch*)patch {
     PYMIDIEndpoint* oldInput = [patch input];
     if (oldInput == input) return;
     
@@ -461,13 +406,9 @@
     ];
 }
 
-
-
 #pragma mark Patch editing - Channel filter
 
-
-- (void)buildFilterChannelControls
-{
+- (void)buildFilterChannelControls {
     NSButtonCell* buttonCell;
     int i;
     
@@ -493,9 +434,7 @@
     }
 }
 
-
-- (void)setFilterChannelControls
-{
+- (void)setFilterChannelControls {
     int i;
     BOOL channelIsEnabled;
     
@@ -507,8 +446,7 @@
             channelIsEnabled = ([selectedPatch channelMask] >> i) & 1;
             [[filterChannelMatrix cellWithTag:i] setState:channelIsEnabled ? NSOnState : NSOffState];
         }
-    }
-    else {
+    } else {
         [filterChannelRadioButtons setEnabled:NO];
         [filterChannelRadioButtons deselectAllCells];
         [filterChannelMatrix setEnabled:NO];
@@ -516,15 +454,11 @@
     }
 }
 
-
-- (IBAction)filterChannelRadioButtonsChanged:(id)sender
-{
+- (IBAction)filterChannelRadioButtonsChanged:(id)sender {
     [self setShouldFilterChannel:[[filterChannelRadioButtons selectedCell] tag] == 1 forPatch:selectedPatch];
 }
 
-
-- (void)setShouldFilterChannel:(BOOL)shouldFilterChannel forPatch:(Patch*)patch
-{
+- (void)setShouldFilterChannel:(BOOL)shouldFilterChannel forPatch:(Patch*)patch {
     BOOL oldValue = [patch shouldFilterChannel];
     if (oldValue == shouldFilterChannel) return;
     
@@ -537,9 +471,7 @@
     ];
 }
 
-
-- (IBAction)filterChannelMatrixChanged:(id)sender
-{
+- (IBAction)filterChannelMatrixChanged:(id)sender {
     int i;
     unsigned int channelMask = 0;
     
@@ -551,10 +483,8 @@
     [self setChannelMask:channelMask forPatch:selectedPatch];
 }
 
-
-- (void)setChannelMask:(unsigned int)channelMask forPatch:(Patch*)patch
-{
-    unsigned int oldMask = [patch channelMask];
+- (void)setChannelMask:(NSUInteger)channelMask forPatch:(Patch*)patch {
+    NSUInteger oldMask = [patch channelMask];
     if (oldMask == channelMask) return;
     
     [patch setChannelMask:channelMask];
@@ -564,16 +494,11 @@
     [[[self undoManager] prepareWithInvocationTarget:self]
         setChannelMask:oldMask forPatch:patch
     ];
-
 }
-
-
 
 #pragma mark Patch editing - Channel remapping
 
-
-- (void)buildRemapChannelControls
-{
+- (void)buildRemapChannelControls {
     int i;
     
     [remapChannelPopUp removeAllItems];
@@ -581,9 +506,7 @@
         [remapChannelPopUp addItemWithTitle:[NSString stringWithFormat:@"%d", i]];
 }
 
-
-- (void)setRemapChannelControls
-{
+- (void)setRemapChannelControls {
     if (selectedPatch != nil) {
         [remapChannelButton setEnabled:YES];
         [remapChannelButton setState:[selectedPatch shouldRemapChannel] ? NSOnState : NSOffState];
@@ -598,15 +521,11 @@
     }
 }
 
-
-- (IBAction)remapChannelButtonChanged:(id)sender
-{
+- (IBAction)remapChannelButtonChanged:(id)sender {
     [self setShouldRemapChannel:[remapChannelButton state] == NSOnState forPatch:selectedPatch];
 }
 
-
-- (void)setShouldRemapChannel:(BOOL)shouldRemapChannel forPatch:(Patch*)patch
-{
+- (void)setShouldRemapChannel:(BOOL)shouldRemapChannel forPatch:(Patch*)patch {
     NSUndoManager* undoManager = [self undoManager];
     BOOL oldValue;
     
@@ -621,16 +540,12 @@
     ];
 }
 
-
-- (IBAction)remapChannelPopUpChanged:(id)sender
-{
+- (IBAction)remapChannelPopUpChanged:(id)sender {
     [self setRemappingChannel:[remapChannelPopUp indexOfSelectedItem] + 1 forPatch:selectedPatch];
 }
 
-
-- (void)setRemappingChannel:(int)channel forPatch:(Patch*)patch
-{
-    int oldValue = [patch remappingChannel];
+- (void)setRemappingChannel:(NSInteger)channel forPatch:(Patch*)patch {
+    NSInteger oldValue = [patch remappingChannel];
     if (oldValue == channel) return;
     
     [patch setRemappingChannel:channel];
@@ -642,18 +557,12 @@
     ];
 }
 
-
-
 #pragma mark Patch editing - Range filtering
 
-
-- (void)buildFilterRangeControls
-{
+- (void)buildFilterRangeControls {
 }
 
-
-- (void)setFilterRangeControls
-{
+- (void)setFilterRangeControls {
     PYMIDIManager* manager = [PYMIDIManager sharedInstance];
     
     if (selectedPatch != nil) {
@@ -665,39 +574,37 @@
         else
             [filterRangeRadioButtons selectCellWithTag:1];
         [lowestAllowedNoteSlider setEnabled:[selectedPatch shouldFilterRange]];
-        [lowestAllowedNoteSlider setIntValue:[selectedPatch lowestAllowedNote]];
+        [lowestAllowedNoteSlider setIntegerValue:[selectedPatch lowestAllowedNote]];
         [lowestAllowedNoteField setEnabled:[selectedPatch shouldFilterRange]];
         [lowestAllowedNoteField setStringValue:[manager nameOfNote:[selectedPatch lowestAllowedNote]]];
         [lowestAllowedNoteStepper setEnabled:[selectedPatch shouldFilterRange]];
-        [lowestAllowedNoteStepper setIntValue:[selectedPatch lowestAllowedNote]];
+        [lowestAllowedNoteStepper setIntegerValue:[selectedPatch lowestAllowedNote]];
         [filterRangeLabelField setEnabled:[selectedPatch shouldFilterRange]];
         [highestAllowedNoteSlider setEnabled:[selectedPatch shouldFilterRange]];
-        [highestAllowedNoteSlider setIntValue:[selectedPatch highestAllowedNote]];
+        [highestAllowedNoteSlider setIntegerValue:[selectedPatch highestAllowedNote]];
         [highestAllowedNoteField setEnabled:[selectedPatch shouldFilterRange]];
         [highestAllowedNoteField setStringValue:[manager nameOfNote:[selectedPatch highestAllowedNote]]];
         [highestAllowedNoteStepper setEnabled:[selectedPatch shouldFilterRange]];
-        [highestAllowedNoteStepper setIntValue:[selectedPatch highestAllowedNote]];
+        [highestAllowedNoteStepper setIntegerValue:[selectedPatch highestAllowedNote]];
     }
     else {
         [filterRangeRadioButtons setEnabled:NO];
         [filterRangeRadioButtons deselectAllCells];
         [lowestAllowedNoteSlider setEnabled:NO];
-        [lowestAllowedNoteSlider setIntValue:0];
+        [lowestAllowedNoteSlider setIntegerValue:0];
         [lowestAllowedNoteField setEnabled:NO];
         [lowestAllowedNoteField setStringValue:@""];
         [lowestAllowedNoteStepper setEnabled:NO];
         [filterRangeLabelField setEnabled:NO];
         [highestAllowedNoteSlider setEnabled:NO];
-        [highestAllowedNoteSlider setIntValue:127];
+        [highestAllowedNoteSlider setIntegerValue:127];
         [highestAllowedNoteField setEnabled:NO];
         [highestAllowedNoteField setStringValue:@""];
         [highestAllowedNoteStepper setEnabled:NO];
     }
 }
 
-
-- (IBAction)filterRangeRadioButtonsChanged:(id)sender
-{
+- (IBAction)filterRangeRadioButtonsChanged:(id)sender {
     switch ([[filterRangeRadioButtons selectedCell] tag]) {
     case 0:
         [self setShouldAllowNotes:YES forPatch:selectedPatch];
@@ -716,9 +623,7 @@
     }
 }
 
-
-- (void)setShouldAllowNotes:(BOOL)shouldAllowNotes forPatch:(Patch*)patch
-{
+- (void)setShouldAllowNotes:(BOOL)shouldAllowNotes forPatch:(Patch*)patch {
     BOOL oldValue = [patch shouldAllowNotes];
     if (oldValue == shouldAllowNotes) return;
     
@@ -734,9 +639,7 @@
     ];
 }
 
-
-- (void)setShouldFilterRange:(BOOL)shouldFilterRange forPatch:(Patch*)patch
-{
+- (void)setShouldFilterRange:(BOOL)shouldFilterRange forPatch:(Patch*)patch {
     BOOL oldValue = [patch shouldFilterRange];
     if (oldValue == shouldFilterRange) return;
     
@@ -749,22 +652,15 @@
     ];
 }
 
-
-
-- (IBAction)lowestAllowedNoteSliderChanged:(id)sender
-{
-    [self setLowestAllowedNote:[lowestAllowedNoteSlider intValue] forPatch:selectedPatch];
+- (IBAction)lowestAllowedNoteSliderChanged:(id)sender {
+    [self setLowestAllowedNote:[lowestAllowedNoteSlider integerValue] forPatch:selectedPatch];
 }
 
-
-- (IBAction)lowestAllowedNoteStepperChanged:(id)sender
-{
-    [self setLowestAllowedNote:[lowestAllowedNoteStepper intValue] forPatch:selectedPatch];
+- (IBAction)lowestAllowedNoteStepperChanged:(id)sender {
+    [self setLowestAllowedNote:[lowestAllowedNoteStepper integerValue] forPatch:selectedPatch];
 }
 
-
-- (void)setLowestAllowedNote:(Byte)note forPatch:(Patch*)patch
-{
+- (void)setLowestAllowedNote:(Byte)note forPatch:(Patch*)patch {
     Byte oldNote = [patch lowestAllowedNote];
     if (oldNote == note) return;
     
@@ -778,21 +674,15 @@
    
 }
 
-
-- (IBAction)highestAllowedNoteSliderChanged:(id)sender
-{
-    [self setHighestAllowedNote:[highestAllowedNoteSlider intValue] forPatch:selectedPatch];
+- (IBAction)highestAllowedNoteSliderChanged:(id)sender {
+    [self setHighestAllowedNote:[highestAllowedNoteSlider integerValue] forPatch:selectedPatch];
 }
 
-
-- (IBAction)highestAllowedNoteStepperChanged:(id)sender
-{
-    [self setHighestAllowedNote:[highestAllowedNoteStepper intValue] forPatch:selectedPatch];
+- (IBAction)highestAllowedNoteStepperChanged:(id)sender {
+    [self setHighestAllowedNote:[highestAllowedNoteStepper integerValue] forPatch:selectedPatch];
 }
 
-
-- (void)setHighestAllowedNote:(Byte)note forPatch:(Patch*)patch
-{
+- (void)setHighestAllowedNote:(Byte)note forPatch:(Patch*)patch {
     Byte oldNote = [patch highestAllowedNote];
     if (oldNote == note) return;
     
@@ -806,52 +696,42 @@
    
 }
 
-
-
 #pragma mark Patch editing - Transposition
 
-
-- (void)buildTransposeControls
-{
+- (void)buildTransposeControls {
 }
 
-
-- (void)setTransposeControls
-{
+- (void)setTransposeControls {
     if (selectedPatch != nil) {
         [transposeButton setEnabled:[selectedPatch shouldAllowNotes]];
         [transposeButton setState:[selectedPatch shouldTranspose] ? NSOnState : NSOffState];
         [transposeDistanceSlider
             setEnabled:[selectedPatch shouldAllowNotes] && [selectedPatch shouldTranspose]];
-        [transposeDistanceSlider setIntValue:[selectedPatch transposeDistance]];
+        [transposeDistanceSlider setIntegerValue:[selectedPatch transposeDistance]];
         [transposeDistanceField
             setEnabled:[selectedPatch shouldAllowNotes] && [selectedPatch shouldTranspose]];
         [transposeDistanceField
-            setStringValue:[NSString stringWithFormat:@"%+d", [selectedPatch transposeDistance]]];
+            setStringValue:[NSString stringWithFormat:@"%ld", (long)[selectedPatch transposeDistance]]];
         [transposeDistanceStepper
             setEnabled:[selectedPatch shouldAllowNotes] && [selectedPatch shouldTranspose]];
-        [transposeDistanceStepper setIntValue:[selectedPatch transposeDistance]];
+        [transposeDistanceStepper setIntegerValue:[selectedPatch transposeDistance]];
     }
     else {
         [transposeButton setEnabled:NO];
         [transposeButton setState:NSOffState];
         [transposeDistanceSlider setEnabled:NO];
-        [transposeDistanceSlider setIntValue:0];
+        [transposeDistanceSlider setIntegerValue:0];
         [transposeDistanceField setEnabled:NO];
         [transposeDistanceField setStringValue:@""];
         [transposeDistanceStepper setEnabled:NO];
     }
 }
 
-
-- (IBAction)transposeButtonChanged:(id)sender
-{
+- (IBAction)transposeButtonChanged:(id)sender {
     [self setShouldTranspose:[transposeButton state] == NSOnState forPatch:selectedPatch];
 }
 
-
-- (void)setShouldTranspose:(BOOL)shouldTranspose forPatch:(Patch*)patch
-{
+- (void)setShouldTranspose:(BOOL)shouldTranspose forPatch:(Patch*)patch {
     NSUndoManager* undoManager = [self undoManager];
     Byte oldValue;
     
@@ -866,20 +746,15 @@
     ];
 }
 
-- (IBAction)transposeDistanceSliderChanged:(id)sender
-{
-    [self setTransposeDistance:[transposeDistanceSlider intValue] forPatch:selectedPatch];
+- (IBAction)transposeDistanceSliderChanged:(id)sender {
+    [self setTransposeDistance:[transposeDistanceSlider integerValue] forPatch:selectedPatch];
 }
 
-
-- (IBAction)transposeDistanceStepperChanged:(id)sender
-{
-    [self setTransposeDistance:[transposeDistanceStepper intValue] forPatch:selectedPatch];
+- (IBAction)transposeDistanceStepperChanged:(id)sender {
+    [self setTransposeDistance:[transposeDistanceStepper integerValue] forPatch:selectedPatch];
 }
 
-
-- (void)setTransposeDistance:(int)distance forPatch:(Patch*)patch
-{
+- (void)setTransposeDistance:(NSInteger)distance forPatch:(Patch*)patch {
     Byte oldDistance = [patch transposeDistance];
     if (oldDistance == distance) return;
     
@@ -892,35 +767,27 @@
     ];
 }
 
-
-
 #pragma mark Patch editing - Clock
 
-
-- (void)buildTransmitClockControls
-{
+- (void)buildTransmitClockControls {
 }
 
-- (void)setTransmitClockControls
-{
+- (void)setTransmitClockControls {
     if (selectedPatch != nil) {
         [transmitClockButton setEnabled:YES];
         [transmitClockButton setState:[selectedPatch shouldTransmitClock] ? NSOnState : NSOffState];
-    }
-    else {
+    } else {
         [transmitClockButton setEnabled:NO];
         [transmitClockButton setState:NSOffState];
     }
 }
 
-- (IBAction)transmitClockButtonChanged:(id)sender
-{
+- (IBAction)transmitClockButtonChanged:(id)sender {
     [self setShouldTransmitClock:[transmitClockButton state] == NSOnState forPatch:selectedPatch];
 }
 
 
-- (void)setShouldTransmitClock:(BOOL)state forPatch:(Patch*)patch
-{
+- (void)setShouldTransmitClock:(BOOL)state forPatch:(Patch*)patch {
     NSUndoManager* undoManager = [self undoManager];
     BOOL oldState;
     
@@ -936,8 +803,7 @@
 }
 
 
-- (void)buildOutputPopUp
-{
+- (void)buildOutputPopUp {
     PYMIDIManager*	manager = [PYMIDIManager sharedInstance];
     NSArray*		realDestinations;
     NSEnumerator*	enumerator;
@@ -971,27 +837,23 @@
 }
 
 
-- (void)setOutputPopUp
-{
+- (void)setOutputPopUp {
     if (selectedPatch != nil) {
         [outputPopUp setEnabled:YES];
         [outputPopUp selectItemAtIndex:[outputPopUp indexOfItemWithRepresentedObject:[selectedPatch output]]];
-    }
-    else {
+    } else {
         [outputPopUp setEnabled:NO];
         [outputPopUp selectItemAtIndex:-1];
     }
 }
 
 
-- (IBAction)outputPopUpChanged:(id)sender
-{
+- (IBAction)outputPopUpChanged:(id)sender {
     [self setOutput:[[outputPopUp selectedItem] representedObject] forPatch:selectedPatch];
 }
 
 
-- (void)setOutput:(PYMIDIEndpoint*)output forPatch:(Patch*)patch
-{
+- (void)setOutput:(PYMIDIEndpoint*)output forPatch:(Patch*)patch {
     PYMIDIEndpoint* oldOutput = [patch output];
     if (oldOutput == output) return;
     
@@ -1009,8 +871,7 @@
 #pragma mark Virtual endpoints
 
 
-- (IBAction)editVirtualInputs:(id)sender
-{
+- (IBAction)editVirtualInputs:(id)sender {
     [self setInputPopUp];
     
     [virtualEndpointTabView selectTabViewItemAtIndex:0];
@@ -1030,8 +891,7 @@
 }
 
 
-- (IBAction)editVirtualOutputs:(id)sender
-{
+- (IBAction)editVirtualOutputs:(id)sender {
     [self setOutputPopUp];
     
     [virtualEndpointTabView selectTabViewItemAtIndex:1];
@@ -1051,8 +911,7 @@
 }
 
 
-- (IBAction)newInputButtonPressed:(id)sender
-{
+- (IBAction)newInputButtonPressed:(id)sender {
     NSString* baseName = [NSString stringWithFormat:@"%@ input",
         [[[self displayName] lastPathComponent] stringByDeletingPathExtension]
     ];
@@ -1066,8 +925,7 @@
     
 
 
-- (IBAction)newOutputButtonPressed:(id)sender
-{
+- (IBAction)newOutputButtonPressed:(id)sender {
     NSString* baseName = [NSString stringWithFormat:@"%@ output",
         [[[self displayName] lastPathComponent] stringByDeletingPathExtension]
     ];
@@ -1081,8 +939,7 @@
 
 
 
-- (IBAction)endpointPanelButtonPressed:(id)sender
-{
+- (IBAction)endpointPanelButtonPressed:(id)sender {
     if ([virtualEndpointPanel makeFirstResponder:nil]) {        
         [virtualEndpointPanel orderOut:self];
         [[NSApplication sharedApplication] endSheet:virtualEndpointPanel returnCode:0];
@@ -1090,9 +947,8 @@
 }
 
 
-- (void)endpointPanelDidEnd:(NSWindow*)sheet returnCode:(int)returnCode contextInfo:(void*)contextInfo
-{
-    int tab = [virtualEndpointTabView indexOfTabViewItem:[virtualEndpointTabView selectedTabViewItem]];
+- (void)endpointPanelDidEnd:(NSWindow*)sheet returnCode:(NSInteger)returnCode contextInfo:(void*)contextInfo {
+    NSInteger tab = [virtualEndpointTabView indexOfTabViewItem:[virtualEndpointTabView selectedTabViewItem]];
     
     if (panelWasOpenedToInputs) {
         if (tab == 0 && [inputTable selectedRow] != -1) {
@@ -1109,6 +965,5 @@
 
     [[self undoManager] endUndoGrouping];
 }
-
 
 @end

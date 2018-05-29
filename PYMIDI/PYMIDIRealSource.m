@@ -10,8 +10,7 @@
 static void midiReadProc (const MIDIPacketList* packetList, void* createRefCon, void* connectRefConn);
 
 
-- (id)initWithCoder:(NSCoder*)coder
-{
+- (id)initWithCoder:(NSCoder*)coder {
     PYMIDIManager*				manager = [PYMIDIManager sharedInstance];
     NSString*					newName;
     SInt32						newUniqueID;
@@ -28,10 +27,7 @@ static void midiReadProc (const MIDIPacketList* packetList, void* createRefCon, 
     return [[manager realSourceWithDescriptor:descriptor] retain];
 }
 
-
-
-- (void)syncWithMIDIEndpoint
-{
+- (void)syncWithMIDIEndpoint {
     MIDIEndpointRef newEndpointRef;
     
     if (midiEndpointRef && PYMIDIDoesSourceStillExist (midiEndpointRef))
@@ -51,9 +47,7 @@ static void midiReadProc (const MIDIPacketList* packetList, void* createRefCon, 
     [self setPropertiesFromMIDIEndpoint];
 }
 
-
-- (void)startIO
-{
+- (void)startIO {
     if (midiEndpointRef == nil || midiPortRef != nil) return;
 
     MIDIInputPortCreate (
@@ -64,8 +58,7 @@ static void midiReadProc (const MIDIPacketList* packetList, void* createRefCon, 
 }
 
 
-- (void)stopIO
-{
+- (void)stopIO {
     if (midiPortRef == nil) return;
     
     MIDIPortDisconnectSource (midiPortRef, midiEndpointRef);
@@ -74,8 +67,7 @@ static void midiReadProc (const MIDIPacketList* packetList, void* createRefCon, 
 }
 
 
-- (void)processMIDIPacketList:(const MIDIPacketList*)packetList sender:(id)sender
-{
+- (void)processMIDIPacketList:(const MIDIPacketList*)packetList sender:(id)sender {
     // I'm not sure how expensive creating an auto release pool here is.
     // I'm hoping it's cheap, meaning it won't add much latency.  It also
     // means that we can do memory allocation freely in the processing and

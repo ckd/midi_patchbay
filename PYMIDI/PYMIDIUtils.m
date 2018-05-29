@@ -175,12 +175,11 @@ PYMIDIGetDestinationByName (NSString* nameToMatch)
 Boolean
 PYMIDIIsUniqueIDInUse (SInt32 uniqueID)
 {
-    int count;
     int index;
     MIDIEndpointRef endpoint;
     SInt32 usedID;
     
-    count = MIDIGetNumberOfSources();
+    NSUInteger count = MIDIGetNumberOfSources();
     for (index = 0; index < count; index++) {
         endpoint = MIDIGetSource (index);
         MIDIObjectGetIntegerProperty (endpoint, kMIDIPropertyUniqueID, &usedID);

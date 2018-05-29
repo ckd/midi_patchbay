@@ -1,8 +1,6 @@
 #import <AppKit/AppKit.h>
 #import <CoreMIDI/CoreMIDI.h>
-
 #import <PYMIDI/PYMIDIEndpoint.h>
-
 
 @interface Patch : NSObject <NSCoding> {
     BOOL			isInLimbo;
@@ -12,7 +10,7 @@
     PYMIDIEndpoint*	input;
     
     BOOL			shouldFilterChannel;
-    unsigned int	channelMask;
+    NSUInteger	channelMask;
     
     BOOL			shouldAllowNotes;
     BOOL			shouldFilterRange;
@@ -20,10 +18,10 @@
     Byte			highestAllowedNote;
     
     BOOL			shouldTranspose;
-    int				transposeDistance;
+    NSInteger		transposeDistance;
     
     BOOL			shouldRemapChannel;
-    int				remappingChannel;
+    NSInteger		remappingChannel;
     
     BOOL			shouldTransmitClock;
     
@@ -63,15 +61,15 @@
 
 - (BOOL)shouldFilterChannel;
 - (void)setShouldFilterChannel:(BOOL)newShouldFilterChannel;
-- (unsigned int)channelMask;
-- (void)setChannelMask:(unsigned int)newChannelMask;
+- (NSUInteger)channelMask;
+- (void)setChannelMask:(NSUInteger)newChannelMask;
 
 #pragma mark Filters - Remap channels
 
 - (BOOL)shouldRemapChannel;
 - (void)setShouldRemapChannel:(BOOL)newShouldRemapChannel;
-- (int)remappingChannel;
-- (void)setRemappingChannel:(int)newRemappingChannel;
+- (NSInteger)remappingChannel;
+- (void)setRemappingChannel:(NSInteger)newRemappingChannel;
 
 #pragma mark Filters - Allow notes
 
@@ -91,8 +89,8 @@
 
 - (BOOL)shouldTranspose;
 - (void)setShouldTranspose:(BOOL)newShouldTranspose;
-- (int)transposeDistance;
-- (void)setTransposeDistance:(int)newTransposeDistance;
+- (NSInteger)transposeDistance;
+- (void)setTransposeDistance:(NSInteger)newTransposeDistance;
 
 #pragma mark Filters - Transmit clock
 

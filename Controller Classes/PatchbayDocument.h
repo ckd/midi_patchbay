@@ -90,9 +90,9 @@
 - (void)selectedPatchChanged:(NSNotification*)notification;
 - (IBAction)addPatchButtonPressed:(id)sender;
 
-- (void)addPatch:(Patch*)patch atIndex:(int)index;
-- (void)addPatchFromArchive:(NSData*)data atIndex:(int)index;
-- (void)removePatchAtIndex:(int)index;
+- (void)addPatch:(Patch*)patch atIndex:(NSInteger)index;
+- (void)addPatchFromArchive:(NSData*)data atIndex:(NSInteger)index;
+- (void)removePatchAtIndex:(NSInteger)index;
 - (void)setIsEnabled:(BOOL)isEnabled forPatch:(Patch*)patch;
 
 - (NSData*)archivePatchForPasteBoard:(Patch*)patch;
@@ -113,7 +113,7 @@
 - (IBAction)filterChannelRadioButtonsChanged:(id)sender;
 - (void)setShouldFilterChannel:(BOOL)shouldFilterChannel forPatch:(Patch*)patch;
 - (IBAction)filterChannelMatrixChanged:(id)sender;
-- (void)setChannelMask:(unsigned int)channelMask forPatch:(Patch*)patch;
+- (void)setChannelMask:(NSUInteger)channelMask forPatch:(Patch*)patch;
 
 #pragma mark Patch editing - Channel remapping
 
@@ -122,7 +122,7 @@
 - (IBAction)remapChannelButtonChanged:(id)sender;
 - (void)setShouldRemapChannel:(BOOL)shouldRemapChannel forPatch:(Patch*)patch;
 - (IBAction)remapChannelPopUpChanged:(id)sender;
-- (void)setRemappingChannel:(int)channel forPatch:(Patch*)patch;
+- (void)setRemappingChannel:(NSInteger)channel forPatch:(Patch*)patch;
 
 #pragma mark Patch editing - Range filtering
 
@@ -146,7 +146,7 @@
 - (void)setShouldTranspose:(BOOL)shouldTranspose forPatch:(Patch*)patch;
 - (IBAction)transposeDistanceSliderChanged:(id)sender;
 - (IBAction)transposeDistanceStepperChanged:(id)sender;
-- (void)setTransposeDistance:(int)distance forPatch:(Patch*)patch;
+- (void)setTransposeDistance:(NSInteger)distance forPatch:(Patch*)patch;
 
 #pragma mark Patch editing - Clock
 
@@ -170,7 +170,7 @@
 
 - (IBAction)endpointPanelButtonPressed:(id)sender;
 
-- (void)endpointPanelDidEnd:(NSWindow*)sheet returnCode:(int)returnCode contextInfo:(void*)contextInfo;
+- (void)endpointPanelDidEnd:(NSWindow*)sheet returnCode:(NSInteger)returnCode contextInfo:(void*)contextInfo;
 
 
 @end

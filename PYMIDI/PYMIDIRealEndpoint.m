@@ -1,12 +1,9 @@
 #import <PYMIDI/PYMIDIRealEndpoint.h>
 #import <PYMIDI/PYMIDIEndpointDescriptor.h>
 
-
 @implementation PYMIDIRealEndpoint
 
-
-- (id)initWithMIDIEndpointRef:(MIDIEndpointRef)newMIDIEndpointRef
-{
+- (id)initWithMIDIEndpointRef:(MIDIEndpointRef)newMIDIEndpointRef {
     self = [super initWithMIDIEndpointRef:newMIDIEndpointRef];
     
     if (self != nil) {
@@ -16,9 +13,7 @@
     return self;
 }
 
-
-- (id)initWithDescriptor:(PYMIDIEndpointDescriptor*)descriptor
-{
+- (id)initWithDescriptor:(PYMIDIEndpointDescriptor*)descriptor  {
     self = [super initWithName:[descriptor name] uniqueID:[descriptor uniqueID]];
     
     if (self != nil) {
@@ -28,16 +23,12 @@
     return self;
 }
 
-
-- (void)syncWithMIDIEndpoint
-{
+- (void)syncWithMIDIEndpoint {
 }
 
 
-- (BOOL)ioIsRunning
-{
+- (BOOL)ioIsRunning {
     return midiPortRef != nil;
 }
-
 
 @end
