@@ -54,11 +54,10 @@
 - (BOOL)control:(NSControl*)control isValidObject:(id)value
 {
     if (PYMIDIIsEndpointNameTaken (value)) {
-        NSRunAlertPanel (
-            [NSString stringWithFormat:@"The name \"%@\" is already taken.", value],
-            @"Please choose a different name.",
-            nil, nil, nil
-        );
+        NSAlert *alert = [[NSAlert alloc] init];
+        alert.messageText = @"Please choose a different name.";
+        alert.informativeText = [NSString stringWithFormat:@"The name \"%@\" is already taken.", value];
+        [alert runModal];
         return NO;
     }
     else
@@ -72,11 +71,10 @@
 
     if (![value isEqualToString:@""] && ![value isEqualToString:[endpoint name]]) {
         if (PYMIDIIsEndpointNameTaken (value)) {
-            NSRunAlertPanel (
-                [NSString stringWithFormat:@"The name \"%@\" is already taken.", value],
-                @"Please choose a different name.",
-                nil, nil, nil
-            );
+            NSAlert *alert = [[NSAlert alloc] init];
+            alert.messageText = @"Please choose a different name.";
+            alert.informativeText = [NSString stringWithFormat:@"The name \"%@\" is already taken.", value];
+            [alert runModal];
         }
         else {
             [self tableView:tableView setName:(NSString*)value forEndpointAtIndex:rowIndex];
@@ -90,11 +88,10 @@
     PYMIDIVirtualEndpoint* endpoint = [endpointArray objectAtIndex:[tableView selectedRow]];
     
     if ([endpoint isInUse]) {
-        NSRunAlertPanel (
-            @"The selection is in use by one or more patches and cannot be deleted.",
-            @"",
-            nil, nil, nil
-        );
+        NSAlert *alert = [[NSAlert alloc] init];
+        alert.messageText = @"";
+        alert.informativeText = @"The selection is in use by one or more patches and cannot be deleted.";
+        [alert runModal];
     }
     else {
         [self tableView:tableView removeEndpointAtIndex:[tableView selectedRow]];
