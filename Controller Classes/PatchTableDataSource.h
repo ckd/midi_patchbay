@@ -15,8 +15,8 @@
 - (void)setPatchArray:(NSMutableArray*)newPatchArray;
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView*)tableView;
-- (id)tableView:(NSTableView*)tableView objectValueForTableColumn:(NSTableColumn*)column row:(int)rowIndex;
-- (void)tableView:(NSTableView*)tableView setObjectValue:(id)value forTableColumn:(NSTableColumn*)column row:(int)rowIndex;
+- (id)tableView:(NSTableView*)tableView objectValueForTableColumn:(NSTableColumn*)column row:(NSInteger)rowIndex;
+- (void)tableView:(NSTableView*)tableView setObjectValue:(id)value forTableColumn:(NSTableColumn*)column row:(NSInteger)rowIndex;
 - (void)deleteSelection:(NSTableView*)tableView;
 
 @end

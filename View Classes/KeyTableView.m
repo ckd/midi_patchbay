@@ -4,52 +4,34 @@
 @implementation KeyTableView
 
 
-- (void)keyDown:(NSEvent *)theEvent
-{
+- (void)keyDown:(NSEvent *)theEvent {
     [self interpretKeyEvents:[NSArray arrayWithObject:theEvent]];
 }
 
 
-- (void)deleteForward:(id)sender
-{
+- (void)deleteForward:(id)sender {
     [self clear:self];
 }
 
 
-- (void)deleteBackward:(id)sender
-{
+- (void)deleteBackward:(id)sender {
     [self clear:self];
 }
 
 
-- (void)moveUp:(id)sender
-{
+- (void)moveUp:(id)sender {
     if ([self selectedRow] > 0) {
         [self selectRowIndexes:[NSIndexSet indexSetWithIndex:([self selectedRow] - 1)] byExtendingSelection:NO];
     }
 }
 
-
-- (void)moveDown:(id)sender
-{
+- (void)moveDown:(id)sender {
     if ([self selectedRow] != -1 && [self selectedRow] < [self numberOfRows]-1) {
         [self selectRowIndexes:[NSIndexSet indexSetWithIndex:([self selectedRow] + 1)] byExtendingSelection:NO];
     }
 }
 
-
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
-{
-    if ([menuItem action] == @selector(clear:))
-        return [self numberOfSelectedRows] > 0;
-        
-    else
-        return YES;
-}
-
-
-- (void)clear:(id)sender
-{
+- (void)clear:(id)sender {
     if ([self selectedRow] == -1) return;
     
     if ([[self dataSource] respondsToSelector:@selector(deleteSelection:)]) {
@@ -59,9 +41,7 @@
     }
 }
 
-
-- (void)textDidEndEditing:(NSNotification*)notification
-{
+- (void)textDidEndEditing:(NSNotification*)notification {
     // This is a hack to make the return key end editing and leave the selection
     // on the current row rather than begin editing the next row.  It works by
     // substituting a dodgy key code in place of the return key.
@@ -84,6 +64,5 @@
     else 
         [super textDidEndEditing:notification];
 }
-
 
 @end

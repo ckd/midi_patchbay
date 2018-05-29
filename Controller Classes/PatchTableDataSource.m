@@ -6,9 +6,7 @@
 
 @implementation PatchTableDataSource
 
-
-- (PatchTableDataSource*)initWithDocument:(PatchbayDocument*)newDocument patchArray:(NSMutableArray*)newPatchArray;
-{
+- (PatchTableDataSource*)initWithDocument:(PatchbayDocument*)newDocument patchArray:(NSMutableArray*)newPatchArray {
     self = [super init];
     
     if (self != nil) {
@@ -19,17 +17,13 @@
     return self;
 }
 
-
-- (void)dealloc
-{
+- (void)dealloc {
     [patchArray release];
     
     [super dealloc];
 }
 
-
-- (void)setPatchArray:(NSMutableArray*)newPatchArray
-{
+- (void)setPatchArray:(NSMutableArray*)newPatchArray {
     [newPatchArray retain];
     [patchArray release];
     patchArray = newPatchArray;
@@ -39,9 +33,7 @@
     return [patchArray count];
 }
 
-
-- (id)tableView:(NSTableView*)tableView objectValueForTableColumn:(NSTableColumn*)column row:(int)rowIndex
-{
+- (id)tableView:(NSTableView*)tableView objectValueForTableColumn:(NSTableColumn*)column row:(NSInteger)rowIndex {
     Patch* patch = [patchArray objectAtIndex:rowIndex];
     id result = nil;
     
@@ -67,9 +59,7 @@
     return result;
 }
 
-
-- (void)tableView:(NSTableView*)tableView setObjectValue:(id)value forTableColumn:(NSTableColumn*)column row:(int)rowIndex
-{
+- (void)tableView:(NSTableView*)tableView setObjectValue:(id)value forTableColumn:(NSTableColumn*)column row:(NSInteger)rowIndex {
     if ([[column identifier] isEqualToString:@"enabled"]) {
         [document setIsEnabled:[value boolValue] forPatch:[patchArray objectAtIndex:rowIndex]];
     }
@@ -86,9 +76,7 @@
     }
 }
 
-
-- (void)deleteSelection:(NSTableView*)tableView
-{
+- (void)deleteSelection:(NSTableView*)tableView {
     [document removePatchAtIndex:[tableView selectedRow]];
 }
 

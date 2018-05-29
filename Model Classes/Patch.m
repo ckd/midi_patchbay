@@ -245,10 +245,7 @@
         description = @"all notes";
 
     if (shouldTranspose) {
-        description = [NSString stringWithFormat:@"%@ transpose %+d",
-            description,
-            (int)transposeDistance
-        ];
+        description = [NSString stringWithFormat:@"%@ transpose %ld", description, (long)transposeDistance];
     }
 
     return description;

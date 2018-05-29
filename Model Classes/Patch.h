@@ -10,7 +10,7 @@
     PYMIDIEndpoint*	input;
     
     BOOL			shouldFilterChannel;
-    NSUInteger	channelMask;
+    NSUInteger	    channelMask;
     
     BOOL			shouldAllowNotes;
     BOOL			shouldFilterRange;

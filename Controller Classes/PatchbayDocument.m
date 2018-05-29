@@ -49,11 +49,6 @@
     
     [super windowControllerDidLoadNib:windowController];
 
-    // These are so that our window and panel use the correct undo manager
-    
-    [documentWindow setDelegate:self];
-    [virtualEndpointPanel setDelegate:self];
-
     // Set up the patch related stuff
     
     buttonCell = [[NSButtonCell alloc] init];
