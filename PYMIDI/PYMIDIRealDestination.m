@@ -28,10 +28,10 @@
     if (midiEndpointRef && PYMIDIDoesDestinationStillExist (midiEndpointRef))
         newEndpointRef = midiEndpointRef;
     else
-        newEndpointRef = NULL;
+        newEndpointRef = 0;
 
-    if (newEndpointRef == NULL) newEndpointRef = PYMIDIGetDestinationByUniqueID (uniqueID);
-    if (newEndpointRef == NULL) newEndpointRef = PYMIDIGetDestinationByName (name);
+    if (newEndpointRef == 0) newEndpointRef = PYMIDIGetDestinationByUniqueID (uniqueID);
+    if (newEndpointRef == 0) newEndpointRef = PYMIDIGetDestinationByName (name);
     
     if (midiEndpointRef != newEndpointRef) {
         [self stopIO];
@@ -43,7 +43,7 @@
 }
 
 - (void)startIO {
-    if (midiEndpointRef == nil || midiPortRef != nil) return;
+    if (midiEndpointRef == 0 || midiPortRef != 0) return;
 
     MIDIOutputPortCreate (
         [[PYMIDIManager sharedInstance] midiClientRef], CFSTR("PYMIDIRealDestination"),
@@ -52,14 +52,14 @@
 }
 
 - (void)stopIO {
-    if (midiPortRef == nil) return;
+    if (midiPortRef == 0) return;
     
     MIDIPortDispose (midiPortRef);
-    midiPortRef = nil;
+    midiPortRef = 0;
 }
 
 - (void)processMIDIPacketList:(const MIDIPacketList*)packetList sender:(id)sender {
-    if (midiEndpointRef != NULL && midiPortRef != NULL)
+    if (midiEndpointRef != 0 && midiPortRef != 0)
         MIDISend (midiPortRef, midiEndpointRef, packetList);
 }
 
