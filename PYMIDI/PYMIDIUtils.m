@@ -1,9 +1,6 @@
 #import <PYMIDI/PYMIDIUtils.h>
 
-
-NSString*
-PYMIDIGetEndpointName (MIDIEndpointRef midiEndpointRef)
-{
+NSString* PYMIDIGetEndpointName (MIDIEndpointRef midiEndpointRef) {
     OSStatus result;
 
     // Get the device name
@@ -61,10 +58,7 @@ PYMIDIGetEndpointName (MIDIEndpointRef midiEndpointRef)
     return name;
 }
 
-
-Boolean
-PYMIDIDoesSourceStillExist (MIDIEndpointRef endpointToMatch)
-{
+Boolean PYMIDIDoesSourceStillExist (MIDIEndpointRef endpointToMatch) {
     ItemCount count = MIDIGetNumberOfSources();
     ItemCount i;
     for (i = 0; i < count; i++) {
@@ -77,10 +71,7 @@ PYMIDIDoesSourceStillExist (MIDIEndpointRef endpointToMatch)
     return NO;
 }
 
-
-MIDIEndpointRef
-PYMIDIGetSourceByUniqueID (SInt32 uniqueIDToMatch)
-{
+MIDIEndpointRef PYMIDIGetSourceByUniqueID (SInt32 uniqueIDToMatch) {
     ItemCount count, i;
     MIDIEndpointRef endpoint;
     OSStatus error;
@@ -95,14 +86,10 @@ PYMIDIGetSourceByUniqueID (SInt32 uniqueIDToMatch)
             return endpoint;
     }
     
-    return NULL;
+    return 0;
 }
 
-
-
-MIDIEndpointRef
-PYMIDIGetSourceByName (NSString* nameToMatch)
-{
+MIDIEndpointRef PYMIDIGetSourceByName (NSString* nameToMatch) {
     ItemCount count = MIDIGetNumberOfSources();
     ItemCount i;
     for (i = 0; i < count; i++) {
@@ -113,13 +100,10 @@ PYMIDIGetSourceByName (NSString* nameToMatch)
         if (name != nil && [name isEqualToString:nameToMatch]) return endpoint;
     }
     
-    return NULL;
+    return 0;
 }
 
-
-Boolean
-PYMIDIDoesDestinationStillExist (MIDIEndpointRef endpointToMatch)
-{
+Boolean PYMIDIDoesDestinationStillExist (MIDIEndpointRef endpointToMatch) {
     ItemCount count = MIDIGetNumberOfDestinations();
     ItemCount i;
     for (i = 0; i < count; i++) {
@@ -132,11 +116,7 @@ PYMIDIDoesDestinationStillExist (MIDIEndpointRef endpointToMatch)
     return NO;
 }
 
-
-
-MIDIEndpointRef
-PYMIDIGetDestinationByUniqueID (SInt32 uniqueIDToMatch)
-{
+MIDIEndpointRef PYMIDIGetDestinationByUniqueID (SInt32 uniqueIDToMatch) {
     ItemCount count, i;
     MIDIEndpointRef endpoint;
     OSStatus error;
@@ -151,13 +131,10 @@ PYMIDIGetDestinationByUniqueID (SInt32 uniqueIDToMatch)
             return endpoint;
     }
     
-    return NULL;
+    return 0;
 }
 
-
-MIDIEndpointRef
-PYMIDIGetDestinationByName (NSString* nameToMatch)
-{
+MIDIEndpointRef PYMIDIGetDestinationByName (NSString* nameToMatch) {
     ItemCount count = MIDIGetNumberOfDestinations();
     ItemCount i;
     for (i = 0; i < count; i++) {
@@ -168,13 +145,10 @@ PYMIDIGetDestinationByName (NSString* nameToMatch)
         if (name != nil && [name isEqualToString:nameToMatch]) return endpoint;
     }
     
-    return NULL;
+    return 0;
 }
-    
-    
-Boolean
-PYMIDIIsUniqueIDInUse (SInt32 uniqueID)
-{
+
+Boolean PYMIDIIsUniqueIDInUse (SInt32 uniqueID) {
     int index;
     MIDIEndpointRef endpoint;
     SInt32 usedID;
@@ -196,10 +170,7 @@ PYMIDIIsUniqueIDInUse (SInt32 uniqueID)
     return false;
 }
 
-
-SInt32
-PYMIDIAllocateUniqueID (void)
-{
+SInt32 PYMIDIAllocateUniqueID (void) {
     SInt32 uniqueID;
     static SInt32 sequence = 0;
     
@@ -210,30 +181,20 @@ PYMIDIAllocateUniqueID (void)
     return uniqueID;
 }
 
-
-Boolean
-PYMIDIIsEndpointNameTaken (NSString* name)
-{
-    return PYMIDIGetSourceByName      (name) != NULL ||
-           PYMIDIGetDestinationByName (name) != NULL;
+Boolean PYMIDIIsEndpointNameTaken (NSString* name) {
+    return PYMIDIGetSourceByName      (name) != 0 ||
+           PYMIDIGetDestinationByName (name) != 0;
 }
 
-
-Boolean
-PYMIDIIsEndpointLocalVirtual (MIDIEndpointRef midiEndpointRef)
-{
+Boolean PYMIDIIsEndpointLocalVirtual (MIDIEndpointRef midiEndpointRef) {
     SInt32 pid;
     OSStatus error = MIDIObjectGetIntegerProperty (midiEndpointRef, CFSTR("PYMIDIOwnerPID"), &pid);
     return error == noErr && pid == [[NSProcessInfo processInfo] processIdentifier];
 }
 
-
-
 @implementation NSArray(PYMIDIUtils)
 
-
-- (NSArray*)filteredArrayUsingSelector:(SEL)filter
-{
+- (NSArray*)filteredArrayUsingSelector:(SEL)filter {
     NSMutableArray* newArray = [NSMutableArray array];
     
     BOOL (*method)(id, SEL);
